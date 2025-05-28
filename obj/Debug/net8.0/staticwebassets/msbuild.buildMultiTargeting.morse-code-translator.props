@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\morse-code-translator.props" />
+</Project>
