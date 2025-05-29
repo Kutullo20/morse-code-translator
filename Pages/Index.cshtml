@@ -1,10 +1,37 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Hello World Animation";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1>Hello World Animation</h1>
+
+<div class="circle">
+    Hello World
 </div>
+
+<style>
+    .circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-color: #0077cc;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+        position: relative;
+        animation: moveAround 5s linear infinite;
+        margin: 40px auto;
+    }
+
+    @@keyframes moveAround {
+        0% { left: 0; top: 0; position: relative; }
+        25% { left: 100px; top: 0; position: relative; }
+        50% { left: 100px; top: 100px; position: relative; }
+        75% { left: 0; top: 100px; position: relative; }
+        100% { left: 0; top: 0; position: relative; }
+    }
+</style>
