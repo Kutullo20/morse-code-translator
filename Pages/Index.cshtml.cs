@@ -32,7 +32,7 @@ public class IndexModel : PageModel
         }
         return Page();
     }
-        
+
     private static readonly Dictionary<char, string> MorseCodeDictionary = new()
         {
             // Letters A-Z
@@ -45,21 +45,21 @@ public class IndexModel : PageModel
             
             // Numbers 0-9
             {'0', "-----"}, {'1', ".----"}, {'2', "..---"}, {'3', "...--"},
-            {'4', "....-"}, {'5', "....."}, {'6', "-...."}, {'7', "--..."}, 
+            {'4', "....-"}, {'5', "....."}, {'6', "-...."}, {'7', "--..."},
             {'8', "---.."}, {'9', "----."},
             
             // Punctuation and special characters
             {'.', ".-.-.-"}, {',', "--..--"}, {'?', "..--.."}, {'\'', ".----."},
-            {'!', "-.-.--"}, {'/', "-..-."}, {'(', "-.--."}, {')', "-.--.-"}, 
-            {'&', ".-..."}, {':', "---..."}, {';', "-.-.-."}, {'=', "-...-"}, 
-            {'+', ".-.-."}, {'-', "-....-"}, {'_', "..--.-"}, {'"', ".-..-."}, 
+            {'!', "-.-.--"}, {'/', "-..-."}, {'(', "-.--."}, {')', "-.--.-"},
+            {'&', ".-..."}, {':', "---..."}, {';', "-.-.-."}, {'=', "-...-"},
+            {'+', ".-.-."}, {'-', "-....-"}, {'_', "..--.-"}, {'"', ".-..-."},
             {'$', "...-..-"}, {'@', ".--.-."},
             
             // Space character
             {' ', "/"}
         };
 
-        private static readonly Dictionary<string, char> ReverseMorseDictionary = new()
+    private static readonly Dictionary<string, char> ReverseMorseDictionary = new()
         {
             // Letters A-Z
             {".-", 'A'}, {"-...", 'B'}, {"-.-.", 'C'}, {"-..", 'D'}, {".", 'E'},
@@ -84,4 +84,26 @@ public class IndexModel : PageModel
             // Space character
             {"/", ' '}
         };
+        
+        public static string LettersToMorseCode(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return string.Empty;
+
+            var result = new List<string>(text.Length);
+
+            foreach (char character in text.ToUpperInvariant())
+            {
+                if (MorseCodeDictionary.TryGetValue(character, out string? morseChar) && morseChar != null)
+                {
+                    result.Add(morseChar);
+                }
+                else
+                {
+                    result.Add("?"); // handle invalid characters
+                }
+            }
+
+            return string.Join(' ', result);
+        }
 }
