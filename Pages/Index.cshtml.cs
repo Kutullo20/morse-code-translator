@@ -4,36 +4,36 @@ using System.ComponentModel.DataAnnotations;
 using System;
 using System.Collections.Generic;
 
-namespace morse_code_translator.Pages;
-
-public class IndexModel : PageModel
+namespace morse_code_translator.Pages
 {
-    [BindProperty]
-    public MorseTranslatorModel Translator { get; set; } = new();
-
-    public void OnGet()
+    public class IndexModel : PageModel
     {
-    }
+        [BindProperty]
+        public MorseTranslatorModel Translator { get; set; } = new();
 
-    public IActionResult OnPostTranslateToMorse()
-    {
-        if (ModelState.IsValid)
+        public void OnGet()
         {
-            Translator.MorseResult = LettersToMorseCode(Translator.TextInput);
         }
-        return Page();
-    }
 
-    public IActionResult OnPostTranslateToText()
-    {
-        if (ModelState.IsValid)
+        public IActionResult OnPostTranslateToMorse()
         {
-            Translator.TextResult = MorseCodeToLetters(Translator.MorseInput);
+            if (ModelState.IsValid)
+            {
+                Translator.MorseResult = LettersToMorseCode(Translator.TextInput);
+            }
+            return Page();
         }
-        return Page();
-    }
 
-    private static readonly Dictionary<char, string> MorseCodeDictionary = new()
+        public IActionResult OnPostTranslateToText()
+        {
+            if (ModelState.IsValid)
+            {
+                Translator.TextResult = MorseCodeToLetters(Translator.MorseInput);
+            }
+            return Page();
+        }
+
+        private static readonly Dictionary<char, string> MorseCodeDictionary = new()
         {
             // Letters A-Z
             {'A', ".-"}, {'B', "-..."}, {'C', "-.-."}, {'D', "-.."}, {'E', "."},
@@ -45,21 +45,21 @@ public class IndexModel : PageModel
             
             // Numbers 0-9
             {'0', "-----"}, {'1', ".----"}, {'2', "..---"}, {'3', "...--"},
-            {'4', "....-"}, {'5', "....."}, {'6', "-...."}, {'7', "--..."},
+            {'4', "....-"}, {'5', "....."}, {'6', "-...."}, {'7', "--..."}, 
             {'8', "---.."}, {'9', "----."},
             
             // Punctuation and special characters
             {'.', ".-.-.-"}, {',', "--..--"}, {'?', "..--.."}, {'\'', ".----."},
-            {'!', "-.-.--"}, {'/', "-..-."}, {'(', "-.--."}, {')', "-.--.-"},
-            {'&', ".-..."}, {':', "---..."}, {';', "-.-.-."}, {'=', "-...-"},
-            {'+', ".-.-."}, {'-', "-....-"}, {'_', "..--.-"}, {'"', ".-..-."},
+            {'!', "-.-.--"}, {'/', "-..-."}, {'(', "-.--."}, {')', "-.--.-"}, 
+            {'&', ".-..."}, {':', "---..."}, {';', "-.-.-."}, {'=', "-...-"}, 
+            {'+', ".-.-."}, {'-', "-....-"}, {'_', "..--.-"}, {'"', ".-..-."}, 
             {'$', "...-..-"}, {'@', ".--.-."},
             
             // Space character
             {' ', "/"}
         };
 
-    private static readonly Dictionary<string, char> ReverseMorseDictionary = new()
+        private static readonly Dictionary<string, char> ReverseMorseDictionary = new()
         {
             // Letters A-Z
             {".-", 'A'}, {"-...", 'B'}, {"-.-.", 'C'}, {"-..", 'D'}, {".", 'E'},
@@ -85,52 +85,53 @@ public class IndexModel : PageModel
             {"/", ' '}
         };
 
-    public static string LettersToMorseCode(string text)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-            return string.Empty;
-
-        var result = new List<string>(text.Length);
-
-        foreach (char character in text.ToUpperInvariant())
+        public static string LettersToMorseCode(string text)
         {
-            if (MorseCodeDictionary.TryGetValue(character, out string? morseChar) && morseChar != null)
+            if (string.IsNullOrWhiteSpace(text))
+                return string.Empty;
+
+            var result = new List<string>(text.Length);
+
+            foreach (char character in text.ToUpperInvariant())
             {
-                result.Add(morseChar);
+                if (MorseCodeDictionary.TryGetValue(character, out string? morseChar) && morseChar != null)
+                {
+                    result.Add(morseChar);
+                }
+                else
+                {
+                    result.Add("?"); // handle invalid characters
+                }
             }
-            else
-            {
-                result.Add("?"); // handle invalid characters
-            }
+
+            return string.Join(' ', result);
         }
 
-        return string.Join(' ', result);
-    }
-
-    public static string MorseCodeToLetters(string code)
-    {
-        if (string.IsNullOrWhiteSpace(code))
-            return string.Empty;
-
-        var result = new List<char>();
-        var morseWords = code.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        foreach (string morseWord in morseWords)
+        public static string MorseCodeToLetters(string code)
         {
-            if (ReverseMorseDictionary.TryGetValue(morseWord, out char letter))
-            {
-                result.Add(letter);
-            }
-            else
-            {
-                result.Add('?'); // handle invalid characters
-            }
-        }
+            if (string.IsNullOrWhiteSpace(code))
+                return string.Empty;
 
-        return new string(result.ToArray());
+            var result = new List<char>();
+            var morseWords = code.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string morseWord in morseWords)
+            {
+                if (ReverseMorseDictionary.TryGetValue(morseWord, out char letter))
+                {
+                    result.Add(letter);
+                }
+                else
+                {
+                     result.Add('?'); // handle invalid characters
+                }
+            }
+
+            return new string(result.ToArray());
+        }
     }
-        
-     public class MorseTranslatorModel
+
+    public class MorseTranslatorModel
     {
         [Display(Name = "Text to translate")]
         public string TextInput { get; set; } = string.Empty;
@@ -145,4 +146,3 @@ public class IndexModel : PageModel
         public string TextResult { get; set; } = string.Empty;
     }
 }
-
