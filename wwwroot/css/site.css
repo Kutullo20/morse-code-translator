@@ -93,3 +93,28 @@ button:hover {
     background-color: white;
     border-radius: 0.25rem;
 }
+
+/* social-media-icons syles (Will be changed)*/
+
+.social-media-icons{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.social-icon{
+    color: blue;
+    font-size: 20px;
+    border: 2px solid blue;    
+    border-radius: 50%;          
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+.social-icon:hover {
+    background-color: blue;
+    color: white;
+}
