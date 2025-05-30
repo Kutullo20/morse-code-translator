@@ -106,28 +106,43 @@ public class IndexModel : PageModel
 
         return string.Join(' ', result);
     }
-        
+
     public static string MorseCodeToLetters(string code)
+    {
+        if (string.IsNullOrWhiteSpace(code))
+            return string.Empty;
+
+        var result = new List<char>();
+        var morseWords = code.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (string morseWord in morseWords)
         {
-            if (string.IsNullOrWhiteSpace(code))
-                return string.Empty;
-
-            var result = new List<char>();
-            var morseWords = code.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (string morseWord in morseWords)
+            if (ReverseMorseDictionary.TryGetValue(morseWord, out char letter))
             {
-                if (ReverseMorseDictionary.TryGetValue(morseWord, out char letter))
-                {
-                    result.Add(letter);
-                }
-                else
-                {
-                     result.Add('?'); // handle invalid characters
-                }
+                result.Add(letter);
             }
-
-            return new string(result.ToArray());
+            else
+            {
+                result.Add('?'); // handle invalid characters
+            }
         }
+
+        return new string(result.ToArray());
+    }
+        
+     public class MorseTranslatorModel
+    {
+        [Display(Name = "Text to translate")]
+        public string TextInput { get; set; } = string.Empty;
+
+        [Display(Name = "Morse Code Result")]
+        public string MorseResult { get; set; } = string.Empty;
+
+        [Display(Name = "Morse Code to translate")]
+        public string MorseInput { get; set; } = string.Empty;
+
+        [Display(Name = "Text Result")]
+        public string TextResult { get; set; } = string.Empty;
+    }
 }
 
