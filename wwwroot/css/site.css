@@ -35,3 +35,61 @@ button {
 button:hover {
     background-color: #155a9c;
 }
+
+/*  Morse Translator Component Styles */
+.translator-container {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.translator-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+    height: 100%;
+}
+
+.translator-input {
+    font-family: 'Courier New', monospace;
+    min-height: 150px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.translator-input:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.translator-btn {
+    background-color: #2c3e50;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.translator-btn:hover {
+    background-color: #1a252f;
+    transform: translateY(-2px);
+}
+
+.translator-result {
+    background-color: #e9f7fe;
+    border-left: 4px solid #3498db;
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+.result-output {
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding: 0.5rem;
+    background-color: white;
+    border-radius: 0.25rem;
+}
