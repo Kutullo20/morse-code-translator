@@ -5,34 +5,83 @@
     Layout = "_Layout";
 }
 
-<h1>Hello World Animation</h1>
+<div class="container">
+    <div class="text-center mb-4">
+        <h1 class="display-4">🤖 R2-D2's Morse Code Translator</h1>
+        <p class="lead">Convert between text and authentic Star Wars droid beeps!</p>
+    </div>
 
-<div class="circle">
-    Hello World
+    @* Main translator container *@
+    <div class="translator-container">
+        <div class="row">
+
+            @* Text to Morse Code Section *@
+            <div class="col-md-6 mb-4">
+                <div class="translator-card">
+                    <h3><i class="fas fa-keyboard"></i> Text to Morse Code</h3>
+                    <form method="post" asp-page-handler="TranslateToMorse">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <textarea asp-for="Translator.TextInput" 
+                                      class="form-control translator-input" 
+                                      rows="5" 
+                                      placeholder="Enter text to convert to Morse code..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary translator-btn">
+                            <i class="fas fa-exchange-alt"></i> Translate to Morse
+                        </button>
+                    </form>
+                    
+                    @* Results display *@
+                    @if (!string.IsNullOrEmpty(Model.Translator.MorseResult))
+                    {
+                        <div class="translator-result mt-3">
+                            <h4><i class="fas fa-code"></i> Morse Code:</h4>
+                            <div class="result-output">
+                                @Model.Translator.MorseResult
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @* Morse Code to Text Section *@
+            <div class="col-md-6 mb-4">
+                <div class="translator-card">
+                    <h3><i class="fas fa-wave-square"></i> Morse Code to Text</h3>
+                    <form method="post" asp-page-handler="TranslateToText">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <textarea asp-for="Translator.MorseInput" 
+                                      class="form-control translator-input" 
+                                      rows="5" 
+                                      placeholder="Enter Morse code with spaces between letters and / for spaces..."></textarea>
+                            <small class="form-text text-muted">
+                                Example: .... . .-.. .-.. --- / .-- --- .-. .-.. -..
+                            </small>
+                        </div>
+                        <button type="submit" class="btn btn-primary translator-btn">
+                            <i class="fas fa-exchange-alt"></i> Translate to Text
+                        </button>
+                    </form>
+                    
+                    @* Results display *@
+                    @if (!string.IsNullOrEmpty(Model.Translator.TextResult))
+                    {
+                        <div class="translator-result mt-3">
+                            <h4><i class="fas fa-font"></i> Text:</h4>
+                            <div class="result-output">
+                                @Model.Translator.TextResult
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<style>
-    .circle {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        background-color: #0077cc;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 1.2rem;
-        position: relative;
-        animation: moveAround 5s linear infinite;
-        margin: 40px auto;
-    }
-
-    @@keyframes moveAround {
-        0% { left: 0; top: 0; position: relative; }
-        25% { left: 100px; top: 0; position: relative; }
-        50% { left: 100px; top: 100px; position: relative; }
-        75% { left: 0; top: 100px; position: relative; }
-        100% { left: 0; top: 0; position: relative; }
-    }
-</style>
+@* Font Awesome for icons *@
+@section Head {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+}
