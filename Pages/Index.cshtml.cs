@@ -84,26 +84,50 @@ public class IndexModel : PageModel
             // Space character
             {"/", ' '}
         };
-        
-        public static string LettersToMorseCode(string text)
+
+    public static string LettersToMorseCode(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return string.Empty;
+
+        var result = new List<string>(text.Length);
+
+        foreach (char character in text.ToUpperInvariant())
         {
-            if (string.IsNullOrWhiteSpace(text))
+            if (MorseCodeDictionary.TryGetValue(character, out string? morseChar) && morseChar != null)
+            {
+                result.Add(morseChar);
+            }
+            else
+            {
+                result.Add("?"); // handle invalid characters
+            }
+        }
+
+        return string.Join(' ', result);
+    }
+        
+    public static string MorseCodeToLetters(string code)
+        {
+            if (string.IsNullOrWhiteSpace(code))
                 return string.Empty;
 
-            var result = new List<string>(text.Length);
+            var result = new List<char>();
+            var morseWords = code.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (char character in text.ToUpperInvariant())
+            foreach (string morseWord in morseWords)
             {
-                if (MorseCodeDictionary.TryGetValue(character, out string? morseChar) && morseChar != null)
+                if (ReverseMorseDictionary.TryGetValue(morseWord, out char letter))
                 {
-                    result.Add(morseChar);
+                    result.Add(letter);
                 }
                 else
                 {
-                    result.Add("?"); // handle invalid characters
+                     result.Add('?'); // handle invalid characters
                 }
             }
 
-            return string.Join(' ', result);
+            return new string(result.ToArray());
         }
 }
+
