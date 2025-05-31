@@ -183,3 +183,105 @@ body {
         font-size: 1.2rem;
     }
 }
+
+/* Animated Mode Selector Buttons */
+.mode-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+}
+
+.mode-btn-wrapper {
+    position: relative;
+    border-radius: var(--border-radius);
+    padding: 2px; 
+}
+
+.mode-btn {
+    position: relative;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    background-color: #e0e0e0;
+    color: #555;
+    border-radius: calc(var(--border-radius) - 2px);
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 1;
+}
+
+/* Mode Selector Border Animation */
+.mode-btn-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: var(--border-radius);
+    padding: 2px;
+    background: linear-gradient(90deg, 
+        var(--accent-color) 0%, 
+        transparent 20%, 
+        transparent 80%, 
+        var(--accent-color) 100%);
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: modeBorderAnimation 2s linear infinite;
+}
+
+@keyframes modeBorderAnimation {
+    0% {
+        background: linear-gradient(90deg, 
+            var(--accent-color) 0%, 
+            transparent 20%, 
+            transparent 80%, 
+            transparent 100%);
+    }
+    25% {
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            var(--accent-color) 25%, 
+            transparent 50%, 
+            transparent 100%);
+    }
+    50% {
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            transparent 30%, 
+            var(--accent-color) 50%, 
+            transparent 70%);
+    }
+    75% {
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            transparent 50%, 
+            var(--accent-color) 75%, 
+            transparent 90%);
+    }
+    100% {
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            transparent 80%, 
+            var(--accent-color) 100%);
+    }
+}
+
+.mode-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.mode-btn:hover:not(.active) {
+    background-color: #d0d0d0;
+}
