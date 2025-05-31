@@ -2,89 +2,116 @@
 @model morse_code_translator.Pages.IndexModel
 @{
     ViewData["Title"] = "R2-D2's Morse Code Translator";
-    Layout = "_Layout";
+    string activeSection = "text";
+    if (!string.IsNullOrEmpty(Model.Translator.TextResult))
+    {
+        activeSection = "morse";
+    }
+    else if (!string.IsNullOrEmpty(Model.Translator.MorseResult))
+    {
+        activeSection = "text";
+    }
 }
 
-<div class="container">
-    <div class="social-media-icons"
-        <a href="#" class="social-icon"><i class=""></i></a>   @* Will be added later *@
-        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+<div class="mode-selector">
+    <div class="mode-btn-wrapper">
+        <button id="textToMorseBtn" class="mode-btn @(activeSection == "text" ? "active" : "")">
+            <i class="fas fa-keyboard"></i> Text to Morse
+        </button>
     </div>
-    <div class="text-center mb-4">
-        <h1 class="display-4">🤖 R2-D2's Morse Code Translator</h1>
-        <p class="lead">Convert between text and authentic Star Wars droid beeps!</p>
+    <div class="mode-btn-wrapper">
+        <button id="morseToTextBtn" class="mode-btn @(activeSection == "morse" ? "active" : "")">
+            <i class="fas fa-wave-square"></i> Morse to Text
+        </button>
     </div>
+</div>
 
-    @* Main translator container *@
-    <div class="translator-container">
-        <div class="row">
-
-            @* Text to Morse Code Section *@
-            <div class="col-md-6 mb-4">
-                <div class="translator-card">
-                    <h3><i class="fas fa-keyboard"></i> Text to Morse Code</h3>
-                    <form method="post" asp-page-handler="TranslateToMorse">
-                        @Html.AntiForgeryToken()
-                        <div class="form-group">
-                            <textarea asp-for="Translator.TextInput" 
-                                      class="form-control translator-input" 
-                                      rows="5" 
-                                      placeholder="Enter text to convert to Morse code..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary translator-btn">
-                            <i class="fas fa-exchange-alt"></i> Translate to Morse
-                        </button>
-                    </form>
-                    
-                    @* Results display *@
-                    @if (!string.IsNullOrEmpty(Model.Translator.MorseResult))
-                    {
-                        <div class="translator-result mt-3">
-                            <h4><i class="fas fa-code"></i> Morse Code:</h4>
-                            <div class="result-output">
-                                @Model.Translator.MorseResult
-                            </div>
-                        </div>
-                    }
-                </div>
+<div class="translator-container">
+    <!-- Text to Morse Section -->
+    <div id="textToMorseSection" class="translator-section @(activeSection == "text" ? "active" : "")">
+        <div class="input-result-wrapper stack-area">
+            <div class="input-container">
+                <form method="post" asp-page-handler="TranslateToMorse" id="textToMorseForm">
+                    @Html.AntiForgeryToken()
+                    <div class="input-group">
+                        <label for="TextInput"><i class="fas fa-font"></i> Enter Text</label>
+                        <textarea asp-for="Translator.TextInput" class="form-control translator-input"
+                                  rows="5" placeholder="Type your message here..." required></textarea>
+                    </div>
+                    <button type="submit" class="translate-btn">
+                        <i class="fas fa-exchange-alt"></i> Translate
+                    </button>
+                </form>
             </div>
 
-            @* Morse Code to Text Section *@
-            <div class="col-md-6 mb-4">
-                <div class="translator-card">
-                    <h3><i class="fas fa-wave-square"></i> Morse Code to Text</h3>
-                    <form method="post" asp-page-handler="TranslateToText">
-                        @Html.AntiForgeryToken()
-                        <div class="form-group">
-                            <textarea asp-for="Translator.MorseInput" 
-                                      class="form-control translator-input" 
-                                      rows="5" 
-                                      placeholder="Enter Morse code with spaces between letters and / for spaces..."></textarea>
-                           
+            <div id="textToMorseResult" class="result-wrapper">
+                @if (!string.IsNullOrEmpty(Model.Translator.MorseResult))
+                {
+                    <div class="result-container">
+                        <h3><i class="fas fa-code"></i> Morse Code Result</h3>
+                        <div class="result-output">
+                            @Model.Translator.MorseResult
                         </div>
-                        <button type="submit" class="btn btn-primary translator-btn">
-                            <i class="fas fa-exchange-alt"></i> Translate to Text
-                        </button>
-                    </form>
-                    
-                    @* Results display *@
-                    @if (!string.IsNullOrEmpty(Model.Translator.TextResult))
-                    {
-                        <div class="translator-result mt-3">
-                            <h4><i class="fas fa-font"></i> Text:</h4>
-                            <div class="result-output">
-                                @Model.Translator.TextResult
-                            </div>
+                        <div class="action-buttons">
+                            <button class="copy-btn" onclick="copyToClipboard('@Model.Translator.MorseResult')">
+                                <i class="far fa-copy"></i> Copy
+                            </button>
+                            <button class="refresh-btn" onclick="resetTranslation('textToMorse')">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
                         </div>
-                    }
-                </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Morse to Text Section -->
+    <div id="morseToTextSection" class="translator-section @(activeSection == "morse" ? "active" : "")">
+        <div class="input-result-wrapper stack-area">
+            <div class="input-container">
+                <form method="post" asp-page-handler="TranslateToText" id="morseToTextForm">
+                    @Html.AntiForgeryToken()
+                    <div class="input-group">
+                        <label for="MorseInput"><i class="fas fa-code"></i> Enter Morse Code</label>
+                        <textarea asp-for="Translator.MorseInput" class="form-control translator-input"
+                                  rows="5" placeholder="Enter Morse code (use space between letters and / for words)..." required></textarea>
+                    </div>
+                    <button type="submit" class="translate-btn">
+                        <i class="fas fa-exchange-alt"></i> Translate
+                    </button>
+                </form>
+            </div>
+
+            <div id="morseToTextResult" class="result-wrapper">
+                @if (!string.IsNullOrEmpty(Model.Translator.TextResult))
+                {
+                    <div class="result-container">
+                        <h3><i class="fas fa-font"></i> Text Result</h3>
+                        <div class="result-output">
+                            @Model.Translator.TextResult
+                        </div>
+                        <div class="action-buttons">
+                            <button class="copy-btn" onclick="copyToClipboard('@Model.Translator.TextResult')">
+                                <i class="far fa-copy"></i> Copy
+                            </button>
+                            <button class="refresh-btn" onclick="resetTranslation('morseToText')">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
 </div>
 
-@* Styled with Font Awesome for icons *@
-@section Head {
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-}
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-content">
+        <div class="r2d2-loader">
+            <i class="fas fa-robot"></i>
+            <div class="spinner"></div>
+        </div>
+        <p>Translating...</p>
+    </div>
+</div>
