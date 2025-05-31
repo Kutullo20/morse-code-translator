@@ -5,18 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Morse Translator</title>
     <link rel="stylesheet" href="~/css/site.css" />
-      @RenderSection("Head", required: false)
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    @RenderSection("Head", required: false)
 </head>
 <body>
-    <header>
-      
-    </header>
-    <main class="container">
-        @RenderBody()
-    </main>
-    <footer>
-        <hr />
-        <p>&copy; 2025 - Morse Code Translator</p>
-    </footer>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-brand">
+                <h1>🤖 R2-D2's Morse Translator</h1>
+                <p class="tagline">Convert between text and authentic Star Wars droid beeps!</p>
+            </div>
+            <div class="header-icons">
+                <div class="icon-container">
+                    <i class="fas fa-robot" title="Droid Mode"></i>
+                </div>
+                <div class="icon-container">
+                    <i class="fas fa-microchip" title="Processor"></i>
+                </div>
+                <div class="icon-container">
+                    <i class="fas fa-satellite" title="Transmitter"></i>
+                </div>
+                <div class="icon-container">
+                    <i class="fas fa-rocket" title="Hyperdrive"></i>
+                </div>
+            </div>
+        </header>
+        
+        <!-- 
+        The <main> section is where the page-specific content gets injected.
+        RenderBody() is a Razor directive that renders the content from views 
+        that use this layout (e.g., Index.cshtml, About.cshtml).
+        Any content in those child views will appear here inside the main area.
+        -->
+        
+        <main>
+            @RenderBody()
+        </main>
+        
+        <footer>
+            <div class="social-links">
+                <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p>&copy; @DateTime.Now.Year - Morse Code Translator</p>
+        </footer>
+    </div>
+    
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
