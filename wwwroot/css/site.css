@@ -33,108 +33,153 @@ body {
     flex-direction: column;
 }
 
-textarea, button {
-    font-size: 16px;
-    border-radius: 4px;
-}
-
-textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-}
-
-button {
-    padding: 10px 20px;
-    background-color: #1b6ec2;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #155a9c;
-}
-
-/*  Morse Translator Component Styles */
-.translator-container {
-    background-color: #f8f9fa;
-    padding: 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-}
-
-.translator-card {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
-    height: 100%;
-}
-
-.translator-input {
-    font-family: 'Courier New', monospace;
-    min-height: 150px;
-    border: 1px solid #ced4da;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.translator-input:focus {
-    border-color: #80bdff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-.translator-btn {
-    background-color: #2c3e50;
-    border: none;
-    padding: 0.5rem 1.5rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.translator-btn:hover {
-    background-color: #1a252f;
-    transform: translateY(-2px);
-}
-
-.translator-result {
-    background-color: #e9f7fe;
-    border-left: 4px solid #3498db;
-    padding: 1rem;
-    border-radius: 0.25rem;
-}
-
-.result-output {
-    font-family: 'Courier New', monospace;
-    white-space: pre-wrap;
-    word-break: break-word;
-    padding: 0.5rem;
-    background-color: white;
-    border-radius: 0.25rem;
-}
-
-/* social-media-icons syles (Will be changed)*/
-
-.social-media-icons{
+/*  Header Styles  */
+.app-header {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to right, var(--secondary-color), var(--dark-color));
+    color: white;
+    padding: 1rem 2rem;
+    margin: 0 calc(-15vw + 50% - 500px) 2rem calc(-15vw + 50% - 500px);
+    width: auto;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
 }
 
-.social-icon{
-    color: blue;
-    font-size: 20px;
-    border: 2px solid blue;    
-    border-radius: 50%;          
-    width: 40px;
-    height: 40px;
+.header-brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.header-brand h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: white;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.header-brand .tagline {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-style: italic;
+    color: var(--light-color);
+    text-align: left;
+}
+
+/* Animated Square Border Icons  */
+.header-icons {
+    display: flex;
+    gap: 1.5rem;
+    margin-left: auto;
+}
+
+.header-icons .icon-container {
+    position: relative;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s, color 0.3s;
 }
-.social-icon:hover {
-    background-color: blue;
+
+/* Icon Border Animation */
+.header-icons .icon-container::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid transparent;
+    border-radius: 2px;
+    animation: iconBorderAnimation 2s linear infinite;
+    box-sizing: border-box;
+}
+
+.header-icons .icon-container::after {
+    content: '';
+    position: absolute;
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    background: linear-gradient(to right, var(--secondary-color), var(--dark-color));
+    border-radius: 2px;
+}
+
+.header-icons i {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    transition: var(--transition);
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.header-icons i:hover {
     color: white;
+    transform: scale(1.2);
+}
+
+@keyframes iconBorderAnimation {
+    0% {
+        border-top: 2px solid var(--accent-color);
+        border-right: 2px solid transparent;
+        border-bottom: 2px solid transparent;
+        border-left: 2px solid transparent;
+    }
+    25% {
+        border-top: 2px solid var(--accent-color);
+        border-right: 2px solid var(--accent-color);
+        border-bottom: 2px solid transparent;
+        border-left: 2px solid transparent;
+    }
+    50% {
+        border-top: 2px solid var(--accent-color);
+        border-right: 2px solid var(--accent-color);
+        border-bottom: 2px solid var(--accent-color);
+        border-left: 2px solid transparent;
+    }
+    75% {
+        border-top: 2px solid var(--accent-color);
+        border-right: 2px solid var(--accent-color);
+        border-bottom: 2px solid var(--accent-color);
+        border-left: 2px solid var(--accent-color);
+    }
+    100% {
+        border-top: 2px solid transparent;
+        border-right: 2px solid var(--accent-color);
+        border-bottom: 2px solid var(--accent-color);
+        border-left: 2px solid var(--accent-color);
+    }
+}
+
+/* Header responsive styles */
+@media (max-width: 768px) {
+    .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .header-icons {
+        gap: 1rem;
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .header-brand h1 {
+        white-space: normal;
+    }
+    
+    .header-icons .icon-container {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .header-icons i {
+        font-size: 1.2rem;
+    }
 }
