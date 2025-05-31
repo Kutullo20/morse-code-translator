@@ -115,3 +115,103 @@
         <p>Translating...</p>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get toggle buttons and translation sections
+            const textToMorseBtn = document.getElementById('textToMorseBtn');
+            const morseToTextBtn = document.getElementById('morseToTextBtn');
+            const textToMorseSection = document.getElementById('textToMorseSection');
+            const morseToTextSection = document.getElementById('morseToTextSection');
+
+            // Toggle to "Text to Morse" view
+            textToMorseBtn.addEventListener('click', function () {
+                this.classList.add('active');
+                morseToTextBtn.classList.remove('active');
+                textToMorseSection.classList.add('active');
+                morseToTextSection.classList.remove('active');
+            });
+
+            
+            // Toggle to "Morse to Text" view
+            morseToTextBtn.addEventListener('click', function () {
+                this.classList.add('active');
+                textToMorseBtn.classList.remove('active');
+                morseToTextSection.classList.add('active');
+                textToMorseSection.classList.remove('active');
+            });
+
+            // Handles translation form submissions with loading animation and fade effect
+            function handleFormSubmission(formId, resultId) {
+                const form = document.getElementById(formId);
+                const section = document.getElementById(resultId).closest('.stack-area');
+                const inputContainer = section.querySelector('.input-container');
+                const resultWrapper = section.querySelector('.result-wrapper');
+
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const overlay = document.getElementById('loadingOverlay');
+                    overlay.querySelector('p').textContent = 'Translating...';
+                    overlay.style.display = 'flex';
+                    inputContainer.classList.add('fade-out');
+
+                    // Delay to allow animation before submitting form
+                    setTimeout(() => {
+                        form.submit();
+                    }, 500);
+                });
+            }
+
+            // Apply handler to both forms
+            handleFormSubmission('textToMorseForm', 'textToMorseResult');
+            handleFormSubmission('morseToTextForm', 'morseToTextResult');
+        });
+
+        // Hides loading overlay and shows result with animation
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            const resultWrappers = document.querySelectorAll('.result-wrapper');
+            resultWrappers.forEach(wrapper => {
+                if (wrapper.innerHTML.trim() !== '') {
+                    wrapper.classList.add('fade-in');
+                    wrapper.style.display = 'flex';
+                }
+            });
+        }
+
+          // Resets translation form and hides result section
+        function resetTranslation(type) {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.querySelector('p').textContent = 'Refreshing...';
+            overlay.style.display = 'flex';
+            
+            setTimeout(() => {
+                if (type === 'textToMorse') {
+                    document.getElementById('textToMorseForm').reset();
+                    document.getElementById('textToMorseResult').classList.remove('fade-in');
+                    document.getElementById('textToMorseResult').style.display = 'none';
+                    document.querySelector('#textToMorseSection .input-container').classList.remove('fade-out');
+                } else {
+                    document.getElementById('morseToTextForm').reset();
+                    document.getElementById('morseToTextResult').classList.remove('fade-in');
+                    document.getElementById('morseToTextResult').style.display = 'none';
+                    document.querySelector('#morseToTextSection .input-container').classList.remove('fade-out');
+                }
+                
+                overlay.style.display = 'none';
+            }, 500);
+        }
+
+        // Run when page fully loads to clean up any loading overlays
+        window.addEventListener('load', hideLoading);
+
+        // Copies given text to clipboard and alerts user
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(
+                () => alert("Copied to clipboard!"),
+                () => alert("Failed to copy.")
+            );
+        }
+    </script>
+}
