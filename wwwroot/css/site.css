@@ -413,7 +413,8 @@ body {
 }
 
 .result-output {
-    background-color: white;
+    background-color: transparent; 
+    border: 2px solid #3da8d8; 
     padding: 1rem;
     border-radius: calc(var(--border-radius) - 2px);
     font-family: 'Courier New', monospace;
