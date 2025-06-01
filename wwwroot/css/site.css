@@ -358,11 +358,12 @@ body {
     width: 100%;
     padding: 1rem;
     border: 2px solid #ddd;
+    background-color: #161716;
     border-radius: var(--border-radius);
     font-size: 1rem;
     resize: vertical;
     min-height: 150px;
-    transition: var(--transition);
+    color: white;
     font-family: 'Courier New', monospace;
 }
 
