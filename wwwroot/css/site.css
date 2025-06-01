@@ -23,7 +23,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f7fa;
+    background-color: #161716;
     color: var(--dark-color);
     line-height: 1.6;
 }
@@ -322,12 +322,14 @@ body {
 
 /* Translation Section Styles*/
 .translator-container {
-    background-color: white;
+    background-color: transparent; 
+    border: 2px solid #3da8d8; 
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     padding: 2rem;
     margin-bottom: 2rem;
     flex-grow: 1;
+    position: relative;
 }
 
 .translator-section {
