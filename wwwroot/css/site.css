@@ -198,6 +198,15 @@ body {
     padding: 2px; 
 }
 
+.mode-divider {
+    height: 2px;
+    background-color: #3da8d8;
+    flex-grow: 1; 
+    max-width: 70em; 
+    margin-top: 27px;
+    border-radius: 50%;
+}
+
 .mode-btn {
     position: relative;
     padding: 0.8rem 1.5rem;
