@@ -1,10 +1,219 @@
 ﻿@page
-@model IndexModel
+@model morse_code_translator.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "R2-D2's Morse Code Translator";
+    string activeSection = "text";
+    if (!string.IsNullOrEmpty(Model.Translator.TextResult))
+    {
+        activeSection = "morse";
+    }
+    else if (!string.IsNullOrEmpty(Model.Translator.MorseResult))
+    {
+        activeSection = "text";
+    }
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="mode-selector">
+    <div class="mode-divider"></div> <!-- Left line -->
+    <div class="mode-btn-wrapper">
+        <button id="textToMorseBtn" class="mode-btn @(activeSection == "text" ? "active" : "")">
+            <i class="fas fa-keyboard"></i> Text to Morse
+        </button>
+    </div>
+    <div class="mode-btn-wrapper">
+        <button id="morseToTextBtn" class="mode-btn @(activeSection == "morse" ? "active" : "")">
+            <i class="fas fa-wave-square"></i> Morse to Text
+        </button>
+    </div>
+    <div class="mode-divider"></div> <!-- Right line -->
 </div>
+
+<div class="translator-container">
+    <!-- Text to Morse Section -->
+    <div id="textToMorseSection" class="translator-section @(activeSection == "text" ? "active" : "")">
+        <div class="input-result-wrapper stack-area">
+            <div class="input-container">
+                <form method="post" asp-page-handler="TranslateToMorse" id="textToMorseForm">
+                    @Html.AntiForgeryToken()
+                    <div class="input-group">
+                        <label for="TextInput"><i class="fas fa-font"></i> Enter Text</label>
+                        <textarea asp-for="Translator.TextInput" class="form-control translator-input"
+                                  rows="5" placeholder="Type your message here..." required></textarea>
+                    </div>
+                    <button type="submit" class="translate-btn">
+                        <i class="fas fa-exchange-alt"></i> Translate
+                    </button>
+                </form>
+            </div>
+
+            <div id="textToMorseResult" class="result-wrapper">
+                @if (!string.IsNullOrEmpty(Model.Translator.MorseResult))
+                {
+                    <div class="result-container">
+                        <h3><i class="fas fa-code"></i> Morse Code Result</h3>
+                        <div class="result-output">
+                            @Model.Translator.MorseResult
+                        </div>
+                        <div class="action-buttons">
+                            <button class="copy-btn" onclick="copyToClipboard('@Model.Translator.MorseResult')">
+                                <i class="far fa-copy"></i> Copy
+                            </button>
+                            <button class="refresh-btn" onclick="resetTranslation('textToMorse')">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Morse to Text Section -->
+    <div id="morseToTextSection" class="translator-section @(activeSection == "morse" ? "active" : "")">
+        <div class="input-result-wrapper stack-area">
+            <div class="input-container">
+                <form method="post" asp-page-handler="TranslateToText" id="morseToTextForm">
+                    @Html.AntiForgeryToken()
+                    <div class="input-group">
+                        <label for="MorseInput"><i class="fas fa-code"></i> Enter Morse Code</label>
+                        <textarea asp-for="Translator.MorseInput" class="form-control translator-input"
+                                  rows="5" placeholder="Enter Morse code (use space between letters and / for words)..." required></textarea>
+                    </div>
+                    <button type="submit" class="translate-btn">
+                        <i class="fas fa-exchange-alt"></i> Translate
+                    </button>
+                </form>
+            </div>
+
+            <div id="morseToTextResult" class="result-wrapper">
+                @if (!string.IsNullOrEmpty(Model.Translator.TextResult))
+                {
+                    <div class="result-container">
+                        <h3><i class="fas fa-font"></i> Text Result</h3>
+                        <div class="result-output">
+                            @Model.Translator.TextResult
+                        </div>
+                        <div class="action-buttons">
+                            <button class="copy-btn" onclick="copyToClipboard('@Model.Translator.TextResult')">
+                                <i class="far fa-copy"></i> Copy
+                            </button>
+                            <button class="refresh-btn" onclick="resetTranslation('morseToText')">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-content">
+        <div class="r2d2-loader">
+            <i class="fas fa-robot"></i>
+            <div class="spinner"></div>
+        </div>
+        <p>Translating...</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get toggle buttons and translation sections
+            const textToMorseBtn = document.getElementById('textToMorseBtn');
+            const morseToTextBtn = document.getElementById('morseToTextBtn');
+            const textToMorseSection = document.getElementById('textToMorseSection');
+            const morseToTextSection = document.getElementById('morseToTextSection');
+
+            // Toggle to "Text to Morse" view
+            textToMorseBtn.addEventListener('click', function () {
+                this.classList.add('active');
+                morseToTextBtn.classList.remove('active');
+                textToMorseSection.classList.add('active');
+                morseToTextSection.classList.remove('active');
+            });
+
+            
+            // Toggle to "Morse to Text" view
+            morseToTextBtn.addEventListener('click', function () {
+                this.classList.add('active');
+                textToMorseBtn.classList.remove('active');
+                morseToTextSection.classList.add('active');
+                textToMorseSection.classList.remove('active');
+            });
+
+            // Handles translation form submissions with loading animation and fade effect
+            function handleFormSubmission(formId, resultId) {
+                const form = document.getElementById(formId);
+                const section = document.getElementById(resultId).closest('.stack-area');
+                const inputContainer = section.querySelector('.input-container');
+                const resultWrapper = section.querySelector('.result-wrapper');
+
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const overlay = document.getElementById('loadingOverlay');
+                    overlay.querySelector('p').textContent = 'Translating...';
+                    overlay.style.display = 'flex';
+                    inputContainer.classList.add('fade-out');
+
+                    // Delay to allow animation before submitting form
+                    setTimeout(() => {
+                        form.submit();
+                    }, 500);
+                });
+            }
+
+            // Apply handler to both forms
+            handleFormSubmission('textToMorseForm', 'textToMorseResult');
+            handleFormSubmission('morseToTextForm', 'morseToTextResult');
+        });
+
+        // Hides loading overlay and shows result with animation
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            const resultWrappers = document.querySelectorAll('.result-wrapper');
+            resultWrappers.forEach(wrapper => {
+                if (wrapper.innerHTML.trim() !== '') {
+                    wrapper.classList.add('fade-in');
+                    wrapper.style.display = 'flex';
+                }
+            });
+        }
+
+          // Resets translation form and hides result section
+        function resetTranslation(type) {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.querySelector('p').textContent = 'Refreshing...';
+            overlay.style.display = 'flex';
+            
+            setTimeout(() => {
+                if (type === 'textToMorse') {
+                    document.getElementById('textToMorseForm').reset();
+                    document.getElementById('textToMorseResult').classList.remove('fade-in');
+                    document.getElementById('textToMorseResult').style.display = 'none';
+                    document.querySelector('#textToMorseSection .input-container').classList.remove('fade-out');
+                } else {
+                    document.getElementById('morseToTextForm').reset();
+                    document.getElementById('morseToTextResult').classList.remove('fade-in');
+                    document.getElementById('morseToTextResult').style.display = 'none';
+                    document.querySelector('#morseToTextSection .input-container').classList.remove('fade-out');
+                }
+                
+                overlay.style.display = 'none';
+            }, 500);
+        }
+
+        // Run when page fully loads to clean up any loading overlays
+        window.addEventListener('load', hideLoading);
+
+        // Copies given text to clipboard and alerts user
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(
+                () => alert("Copied to clipboard!"),
+                () => alert("Failed to copy.")
+            );
+        }
+    </script>
+}
