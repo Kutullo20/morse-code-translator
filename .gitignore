@@ -1,0 +1,39 @@
+# Build output folders
+bin/
+obj/
+
+# Visual Studio workspace and user files
+.vs/
+*.user
+*.suo
+
+# Rider IDE folders
+.idea/
+
+# ASP.NET runtime files
+*.db
+*.db-shm
+*.db-wal
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# NuGet package folders
+packages/
+
+# Publish output folder
+publish/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Resharper files
+_ReSharper*/
+
+# Others
+*.cache
+*.pdb
