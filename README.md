@@ -56,12 +56,15 @@ Before you begin, ensure you have the following installed/configured:
 - Click "Translate" ↔️ to convert to plain text
 - 📋 Copy the result using the copy button  
 
-## 🧪 Development Mode (aka: The Droid Is Still Warming Up...)  () => 
-**No deployment link for now 🙏**
-- We're still fueling R2-D2 with extra binary juice 🛠️🔋
-- For now, **you'll need to handle everything in your IDE or Terminal** – no fancy buttons or cloud builds (yet)😂.
-- 😂 Open that IDE, type `dotnet run`, and let the console be your cockpit!🙌   
+## 🚀 Deployment Status: Live and Operational ✅  () => 
+**The droid has landed on AWS! 🛰️🛸**
+- We've successfully deployed to the cloud using AWS Elastic Beanstalk 🌩️
+- You can now access the live version here 👉 http://development.eba-nw9pmeyj.eu-north-1.elasticbeanstalk.com/
 
+**🙏 Special Thanks**
+- A massive shoutout to Milan Jovanović for his clear and practical tutorial on deploying .NET Core apps to AWS!
+- 📺 I followed his guide here: 👉 https://youtu.be/oCTeUkjkqHs?si=O97O__KTzJtDH_l7
+- Without it, R2-D2 would still be overheating in dev mode. 💥🔧
 ## 📸 UI Preview  () => 
 
 ![Preview 1](prev-1.png)
